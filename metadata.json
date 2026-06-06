@@ -1,0 +1,6 @@
+{
+  "name": "Fake News Detector ML Studio",
+  "description": "An end-to-end Machine Learning and NLP platform to detect fake news, featuring step-by-step preprocessing, model comparisons (Logistic Regression, Naive Bayes, Support Vector Machines), visual evaluation, and a Gemini-powered factual analyzer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
