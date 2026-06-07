@@ -17,6 +17,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Parse JSON bodies
+app.use(express.json());
+
+// Parse form data if needed
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
   origin: "*"
 }));
@@ -164,11 +170,14 @@ const NLP_VOCABULARY: Record<string, TokenWeights> = {
 
 // API: Process Text and return step-by-step preprocessor outputs
 app.post("/api/preprocess-test", (req, res) => {
-  const { text } = req.body;
+ const text = req.body?.text;
+
+if (!text) {
+   return res.status(400).json({
+      error: "Text input missing"
+   });
+}
   
-  if (!text) {
-    return res.status(400).json({ error: "Text prompt is empty" });
-  }
 
   // Segmented steps to show the user exactly what is happening in raw visual format
   const step1Lowercase = text.toLowerCase();
@@ -195,10 +204,12 @@ app.post("/api/preprocess-test", (req, res) => {
 
 // API: Perform local predictions comparing the three trained classifiers
 app.post("/api/predict-compare", (req, res) => {
-  const { text } = req.body;
-  if (!text) {
-    return res.status(400).json({ error: "News content is empty" });
-  }
+  const text = req.body?.text;
+if (!text) {
+   return res.status(400).json({
+      error: "Text input missing"
+   });
+}
 
   const tokens = tsCleanText(text);
   if (tokens.length === 0) {
@@ -324,11 +335,13 @@ app.post("/api/predict-compare", (req, res) => {
 
 // API: Google Gemini Factual Deep Analysis Route
 app.post("/api/gemini-check", async (req, res) => {
-  const { text } = req.body;
+  const text = req.body?.text;
 
-  if (!text) {
-    return res.status(400).json({ error: "Text to check is blank" });
-  }
+if (!text) {
+   return res.status(400).json({
+      error: "Text input missing"
+   });
+}
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
